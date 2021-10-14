@@ -1,4 +1,4 @@
-MoveFactory.define do
+FactoryGirl.define do
   factory :movie do
     title 'Dune'
     director 'Denis Villeneuve'
