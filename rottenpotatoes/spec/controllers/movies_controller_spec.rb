@@ -103,21 +103,20 @@ describe MoviesController do
             expect(movie.title).to eql('Gone Girl')
         end
         it 'redirects to the movie index page' do
-            expect(response).to redirect_to(movies_url)
+            put :update, id: movie.id, movie: FactoryGirl.attributes_for(:movie, title: 'Gone Girl')
+            expect(response).to redirect_to(movie_path(movie))
         end
     end
     
     describe 'delete destroy action' do
         let(:movie) { FactoryGirl.create(:movie) }
         it 'deletes the movie from the DB' do
-            expect { delete :destroy, id: movie.id
-            }.to change(Movie, :count).by(-1)
+            delete :destroy, id: movie.id
+            expect(Movie.count).to eq(0)
         end
         it 'redirects to movies#index after destroy' do
             delete :destroy, id: movie.id
             expect(response).to redirect_to(movies_path)
         end
     end
-    
-    
 end
