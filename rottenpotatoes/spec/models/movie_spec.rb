@@ -2,14 +2,15 @@ require 'rails_helper'
 
 describe Movie do
     describe 'Movie.movies_with_same_director' do
-        
-        let!(:movie1) { Movie.create!(title: 'Inception', director: 'Christopher Nolan') }
-        let!(:movie2) { Movie.create!(title: 'Tenet', director: 'Christopher Nolan') }
-        let!(:movie3) { Movie.create!(title: 'Batman Begins', director: 'Christopher Nolan') }
-        let!(:movie4) { Movie.create!(title: 'Dunkirk', director: 'Christopher Nolan') }
-        let!(:movie5) { Movie.create!(title: 'Gone Girl', director: 'David Fincher') }
-        let!(:movie6) { Movie.create!(title: 'Fight Club', director: 'David Fincher') }
-        let!(:movie7) { Movie.create!(title: 'Dune', director: 'Denis Villeneuve') }
+
+        let!(:movie1) { FactoryGirl.create(:movie, title: 'Inception', director: 'Christopher Nolan') }
+        let!(:movie2) { FactoryGirl.create(:movie, title: 'Tenet', director: 'Christopher Nolan') }
+        let!(:movie3) { FactoryGirl.create(:movie, title: 'Batman Begins', director: 'Christopher Nolan') }
+        let!(:movie4) { FactoryGirl.create(:movie, title: 'Dunkirk', director: 'Christopher Nolan') }
+        let!(:movie5) { FactoryGirl.create(:movie, title: 'Gone Girl', director: 'David Fincher') }
+        let!(:movie6) { FactoryGirl.create(:movie, title: 'Fight Club', director: 'David Fincher') }
+        let!(:movie7) { FactoryGirl.create(:movie, title: 'Dune', director: 'Denis Villeneuve') }
+        let!(:movie8) { FactoryGirl.create(:movie, title: 'Mad Max', director: '') }
         
         it 'finds similar movies' do
             movie1SimilarsList = []
@@ -57,6 +58,10 @@ describe Movie do
             expect(movie1SimilarsList).to_not include(['Gone Girl', 'Fight Club', 'Dune'])
             expect(movie5SimilarsList).to_not include(['Tenet', 'Batman Begins', 'Dunkirk', 'Dune'])
             expect(movie7SimilarsList).to_not include(['Tenet', 'Batman Begins', 'Dunkirk', 'Gone Girl', 'Fight Club'])
+        end
+        
+        it 'returns empty list when no director is found' do
+            expect(Movie.movies_with_same_director(movie8.title)).to eql([])
         end
         
     end

@@ -1,9 +1,8 @@
 class MoviesController < ApplicationController
 
   def show
-    id = params[:id] # retrieve movie ID from URI route
-    @movie = Movie.find(id) # look up movie by unique ID
-    # will render app/views/movies/show.<extension> by default
+    id = params[:id]
+    @movie = Movie.find(id)
   end
 
   def index
@@ -12,17 +11,16 @@ class MoviesController < ApplicationController
   
   def similar_movies
     id = params[:id]
-    @similarToMovie = Movie.find(id)
-    if !@similarToMovie.director.empty? then
-      @movies = Movie.movies_with_same_director(@similarToMovie.title)
+    @current_movie = Movie.find(id)
+    if (!@current_movie.director.nil? and !@current_movie.director.empty?) then
+      @movies = Movie.movies_with_same_director(@current_movie.title)
     else
-      flash[:notice] = "'#{@similarToMovie.title}' has no director info"
+      flash[:notice] = "'#{@current_movie.title}' has no director info"
       redirect_to movies_path
     end
   end
 
   def new
-    # default: render 'new' template
   end
 
   def create
@@ -50,8 +48,6 @@ class MoviesController < ApplicationController
   end
 
   private
-  # Making "internal" methods private is not required, but is a common practice.
-  # This helps make clear which methods respond to requests, and which ones do not.
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date, :director)
   end
